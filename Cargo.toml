@@ -1,0 +1,8 @@
+[package]
+name = "nzsc_core"
+version = "0.1.0"
+authors = ["Kyle Lin <kylejlin.us@gmail.com>"]
+
+description = "The Official (Experimental) NZSC Core Library"
+repository = "https://github.com/nzsc-org/nzsc_core"
+license = "MIT"
