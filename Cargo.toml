@@ -1,6 +1,6 @@
 [package]
 name = "nzsc_core"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Kyle Lin <kylejlin.us@gmail.com>"]
 
 description = "The Official (Experimental) NZSC Core Library"

@@ -1,4 +1,5 @@
 use super::moves::Move;
+use super::boosters::Booster;
 use super::characters::Character;
 
 const MOVE_OUTCOMES: [u8; 28 * 28] = [
@@ -41,23 +42,6 @@ const CHARACTER_OUTCOMES: [u8; 4 * 4] = [
 
 pub struct Headstart(pub u8, pub u8);
 
-pub fn get_points(moves: Vec<Move>) -> Vec<u8> {
-    let mut points = vec![0; moves.len()];
-
-    for (a_index, &a) in moves.iter().enumerate() {
-        for b in &moves {
-            let a = a.to_u8() as u16;
-            let b = b.to_u8() as u16;
-
-            let a_points = MOVE_OUTCOMES[(b * 28 + a) as usize];
-
-            points[a_index] += a_points;
-        }
-    }
-
-    points
-}
-
 pub fn get_headstart(a: Character, b: Character) -> Headstart {
     let a = a.to_u8();
     let b = b.to_u8();
@@ -66,4 +50,34 @@ pub fn get_headstart(a: Character, b: Character) -> Headstart {
     let b_points = CHARACTER_OUTCOMES[(a * 4 + b) as usize];
 
     Headstart(a_points, b_points)
+}
+
+pub fn get_points(booster_move_pairs: Vec<(Booster, Move)>) -> Vec<u8> {
+    let mut points = vec![0; booster_move_pairs.len()];
+
+    for (a_index, &pair_a) in booster_move_pairs.iter().enumerate() {
+        for pair_b in &booster_move_pairs {
+            let a_points = if pair_a.1 == Move::Smash && pair_b.1 == Move::ShadowFireball {
+                if pair_a.0 == Booster::Strong {
+                    1
+                } else {
+                    0
+                }
+            } else if pair_a.1 == Move::ShadowFireball && pair_b.1 == Move::Smash {
+                if pair_b.0 == Booster::Strong {
+                    0
+                } else {
+                    1
+                }
+            } else {
+                let a = pair_a.1.to_u8() as u16;
+                let b = pair_b.1.to_u8() as u16;
+                MOVE_OUTCOMES[(b * 28 + a) as usize]
+            };
+
+            points[a_index] += a_points;
+        }
+    }
+
+    points
 }
